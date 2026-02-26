@@ -98,16 +98,12 @@ docker run --rm ci-cd-demo
 
 ## Notes
 
-IDE files and virtual environments are ignored via .gitignore
-
-Docker ensures environment consistency for CI/CD
-
-Tests are written with pytest, but any Python test framework can be used
+- IDE files and virtual environments are ignored via .gitignore
+- Docker ensures environment consistency for CI/CD 
+- Tests are written with pytest, but any Python test framework can be used
 
 ## Future Improvements (optional)
 
-Push Docker images to a container registry (e.g., Docker Hub or GitHub Container Registry)
-
-Deploy to a cloud platform (AWS ECS, GCP Cloud Run, Azure App Service)
-
-Add linting, security scanning, and matrix testing for multiple Python versions
+- Push Docker images to a container registry (e.g., Docker Hub or GitHub Container Registry)
+- Deploy to a cloud platform (AWS ECS, GCP Cloud Run, Azure App Service)
+- Add linting, security scanning, and matrix testing for multiple Python versions
