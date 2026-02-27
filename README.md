@@ -10,7 +10,8 @@ This project demonstrates:
 - Setting up a Python project with dependencies in requirements.txt
 - Running tests in a CI pipeline on a Linux VM (ubuntu-latest)
 - Building a Docker image and running tests inside the container
-- Pushed the latest and sha tagged Docker image to GitHub Container Registry.
+- Build and push the latest and sha tagged Docker image to GitHub Container Registry.
+- Build and push the latest and sha tagged Docker image to Docker Hub.
 - Using GitHub Actions for continuous integration (CI)
 - Clean repository management with .gitignore to exclude IDE and environment files
 
@@ -20,10 +21,11 @@ This project demonstrates:
 - Dockerized CI/CD: ensures consistent testing across machines
 - GitHub Actions workflow:
 - Triggered on push to master, pull_request to master, and manually via workflow_dispatch
-- Three jobs:
+- Four jobs:
     - VM-based tests
     - Docker-based tests, dependent on VM tests
     - Build & push Docker image to GitHub Container Registry
+    - Build & push Docker image to Docker Hub
 - Clean repository: .idea/, .iml, .venv/ excluded
 
 ## Repository Structure
@@ -61,6 +63,11 @@ GitHub Actions workflow consists of two sequential jobs:
 - Runs after Docker tests pass (dependency chain)
 - Runs only if on the main branch
 - Logs in to GitHub Container Registry using GITHUB_TOKEN
+- Builds and pushes the latest and sha tagged docker images
+### 4. Build & Push Docker image to Docker Hub (`dockerhub-push`)
+- Runs after Docker tests pass (dependency chain)
+- Runs only if on the main branch
+- Logs in to Docker Hub
 - Builds and pushes the latest and sha tagged docker images
 
 ## Setup Instructions (Local)
