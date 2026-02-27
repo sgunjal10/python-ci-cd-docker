@@ -1,6 +1,6 @@
 # Python CI/CD Docker Project
 
-This project demonstrates a robust CI/CD pipeline implementation using GitHub Actions, featuring both VM based and a Docker containerized testing environments. 
+This project demonstrates a robust CI/CD pipeline implementation using GitHub Actions, featuring both VM based and a Docker containerized testing environments.
 The pipeline automatically runs tests on every push or pull requests to the main branch or can be manually triggered for each branch.
 
 ## Project Overview
@@ -10,6 +10,7 @@ This project demonstrates:
 - Setting up a Python project with dependencies in requirements.txt
 - Running tests in a CI pipeline on a Linux VM (ubuntu-latest)
 - Building a Docker image and running tests inside the container
+- Pushed the latest and sha tagged Docker image to GitHub Container Registry.
 - Using GitHub Actions for continuous integration (CI)
 - Clean repository management with .gitignore to exclude IDE and environment files
 
@@ -19,9 +20,10 @@ This project demonstrates:
 - Dockerized CI/CD: ensures consistent testing across machines
 - GitHub Actions workflow:
 - Triggered on push to master, pull_request to master, and manually via workflow_dispatch
-- Two jobs:
-    - VM-based tests 
+- Three jobs:
+    - VM-based tests
     - Docker-based tests, dependent on VM tests
+    - Build & push Docker image to GitHub Container Registry
 - Clean repository: .idea/, .iml, .venv/ excluded
 
 ## Repository Structure
@@ -36,10 +38,10 @@ python-ci-cd-docker/
 ```
 ## GitHub Actions Workflow
 
- Workflow file: .github/workflows/ci.yml 
-  - Triggers:
-    - push to master 
-    - pull_request to master 
+Workflow file: .github/workflows/ci.yml
+- Triggers:
+    - push to master
+    - pull_request to master
     - workflow_dispatch (manual)
 
 ## CI/CD Pipeline
@@ -54,7 +56,13 @@ GitHub Actions workflow consists of two sequential jobs:
 - Builds Docker image from Dockerfile
 - Runs tests inside the container
 - Ensures consistency across different environments
-- 
+### 3. Build & Push Docker image to GitHub Container Registry (`docker-push`)
+- Runs on Ubuntu latest
+- Runs after Docker tests pass (dependency chain)
+- Runs only if on the main branch
+- Logs in to GitHub Container Registry using GITHUB_TOKEN
+- Builds and pushes the latest and sha tagged docker images
+
 ## Setup Instructions (Local)
 
 Clone the repo using SSH (recommended):
@@ -70,7 +78,7 @@ Mac/Linux / WSL
 python -m venv .venv
 source .venv/bin/activate   # Mac/Linux
 ```
-or 
+or
 
 Windows CMD
 ```cmd
@@ -99,11 +107,10 @@ docker run --rm ci-cd-demo
 ## Notes
 
 - IDE files and virtual environments are ignored via .gitignore
-- Docker ensures environment consistency for CI/CD 
+- Docker ensures environment consistency for CI/CD
 - Tests are written with pytest, but any Python test framework can be used
 
 ## Future Improvements (optional)
 
-- Push Docker images to a container registry (e.g., Docker Hub or GitHub Container Registry)
 - Deploy to a cloud platform (AWS ECS, GCP Cloud Run, Azure App Service)
 - Add linting, security scanning, and matrix testing for multiple Python versions
