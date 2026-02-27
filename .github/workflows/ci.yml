@@ -7,6 +7,11 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  packages: write   # required for GHCR push
+
+
 jobs:
 
   # -------------------------------
@@ -51,3 +56,32 @@ jobs:
 
       - name: Run pytest inside container
         run: docker run --rm ci-cd-demo
+
+  # ---------------------------------------------------------
+  # 3. Build & push Docker image to GitHub Container Registry
+  # ---------------------------------------------------------
+  docker-push:
+    name: Push Docker image to GHCR
+    runs-on: ubuntu-latest
+    needs: docker-tests
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+              -t ghcr.io/${{ github.repository_owner }}/python-ci-cd-docker:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/python-ci-cd-docker:latest
