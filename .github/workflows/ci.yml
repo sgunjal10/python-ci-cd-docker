@@ -80,8 +80,10 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-              -t ghcr.io/${{ github.repository_owner }}/python-ci-cd-docker:latest .
+              -t ghcr.io/${{ github.repository_owner }}/python-ci-cd-docker:latest \
+              -t ghcr.io/${{ github.repository_owner }}/python-ci-cd-docker:${{ github.sha }} .
 
       - name: Push Docker image
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/python-ci-cd-docker:latest
+          docker push ghcr.io/${{ github.repository_owner }}/python-ci-cd-docker:${{ github.sha }}
