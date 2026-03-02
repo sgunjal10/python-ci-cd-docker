@@ -6,6 +6,10 @@ on:
       - "v*.*.*"
       - "v*.*.*-*"
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   IMAGE_NAME: python-ci-cd-docker
   GHCR_REGISTRY: ghcr.io
