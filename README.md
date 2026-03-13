@@ -5,7 +5,7 @@ The pipeline automatically runs tests on every push or pull requests to the main
 
 ## Project Overview
 
-This project demonstrates:
+This project demonstrates :
 
 - Setting up a Python project with dependencies in requirements.txt
 - Running tests in a CI pipeline on a Linux VM (ubuntu-latest)
@@ -17,15 +17,17 @@ This project demonstrates:
 
 ## Features
 
-- Multi environment testing: validates code in both VM and containerised environments
+- Two separate workflows for CI and CD
+- Multi-environment testing: validates code in both VM and containerised environments
 - Dockerized CI/CD: ensures consistent testing across machines
 - GitHub Actions workflow:
 - Triggered on push to master, pull_request to master, and manually via workflow_dispatch
-- Four jobs:
-    - VM-based tests
-    - Docker-based tests, dependent on VM tests
-    - Build & push Docker image to GitHub Container Registry
-    - Build & push Docker image to Docker Hub
+- CI jobs:
+  - VM-based tests
+  - Docker-based tests, dependent on VM tests
+- CD jobs: 
+  - Build & push Docker image to GitHub Container Registry
+  - Build & push Docker image to Docker Hub
 - Clean repository: .idea/, .iml, .venv/ excluded
 
 ## Repository Structure
@@ -46,7 +48,7 @@ Workflow file: .github/workflows/ci.yml
     - pull_request to master
     - workflow_dispatch (manual)
 
-## CI/CD Pipeline
+## CI Pipeline
 GitHub Actions workflow consists of two sequential jobs:
 ### 1. VM Tests (`vm-tests`)
 - Runs on Ubuntu latest
@@ -58,13 +60,15 @@ GitHub Actions workflow consists of two sequential jobs:
 - Builds Docker image from Dockerfile
 - Runs tests inside the container
 - Ensures consistency across different environments
-### 3. Build & Push Docker image to GitHub Container Registry (`docker-push`)
+
+## CD Pipeline
+### 1. Build & Push Docker image to GitHub Container Registry (`docker-push`)
 - Runs on Ubuntu latest
 - Runs after Docker tests pass (dependency chain)
 - Runs only if on the main branch
 - Logs in to GitHub Container Registry using GITHUB_TOKEN
 - Builds and pushes the latest and sha tagged docker images
-### 4. Build & Push Docker image to Docker Hub (`dockerhub-push`)
+### 2. Build & Push Docker image to Docker Hub (`dockerhub-push`)
 - Runs after Docker tests pass (dependency chain)
 - Runs only if on the main branch
 - Logs in to Docker Hub
@@ -110,6 +114,13 @@ Build and run Docker container:
 docker build -t ci-cd-demo .
 docker run --rm ci-cd-demo
 ```
+
+## Release Process
+
+1. All code is validated via CI on pull requests and branch pushes
+2. Production releases are triggered by semantic version tags (`vX.Y.Z`)
+3. Docker images are tagged with both the version and `latest`
+4. Production deployments require manual approval
 
 ## Notes
 
